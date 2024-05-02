@@ -252,7 +252,7 @@ class ExperimentManager:
             except EOFError:
                 pass
 
-    def save_trained_model(self, model: BaseAlgorithm) -> None:
+    def save_trained_model(self, model: BaseAlgorithm) -> str:
         """
         Save trained model optionally with its replay buffer
         and ``VecNormalize`` statistics
@@ -260,7 +260,8 @@ class ExperimentManager:
         :param model:
         """
         print(f"Saving to {self.save_path}")
-        model.save(f"{self.save_path}/{self.env_name}")
+        save_path = f"{self.save_path}/{self.env_name}"
+        model.save(save_path)
 
         if hasattr(model, "save_replay_buffer") and self.save_replay_buffer:
             print("Saving replay buffer")
@@ -271,6 +272,8 @@ class ExperimentManager:
             vec_normalize = model.get_vec_normalize_env()
             assert vec_normalize is not None
             vec_normalize.save(os.path.join(self.params_path, "vecnormalize.pkl"))
+
+        return save_path
 
     def _save_config(self, saved_hyperparams: Dict[str, Any]) -> None:
         """

@@ -15,9 +15,11 @@ from stable_baselines3.common.utils import set_random_seed
 import rl_zoo3.import_envs  # noqa: F401
 from rl_zoo3.exp_manager import ExperimentManager
 from rl_zoo3.utils import ALGOS, StoreDict
+import sys
 
 
 def train() -> None:
+    print(sys.argv)
     parser = argparse.ArgumentParser()
     parser.add_argument("--algo", help="RL Algorithm", default="ppo", type=str, required=False, choices=list(ALGOS.keys()))
     parser.add_argument("--env", type=str, default="CartPole-v1", help="environment ID")
@@ -270,7 +272,7 @@ def train() -> None:
         # Normal training
         if model is not None:
             exp_manager.learn(model)
-            exp_manager.save_trained_model(model)
+            return exp_manager.save_trained_model(model)
     else:
         exp_manager.hyperparameters_optimization()
 
